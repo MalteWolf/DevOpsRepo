@@ -1,0 +1,10 @@
+postgres:
+  image: postgres:latest
+  ports:
+    - "5432:5432"
+  environment:
+    POSTGRES_USER: 'postgres'
+    POSTRGRES_PASSWORD: 'root'
+    POSTGRES_DB: 'books'
+  volumes:
+    - ./postgres-data:/var/lib/postgresql/data
