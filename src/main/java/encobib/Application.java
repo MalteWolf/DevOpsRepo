@@ -2,13 +2,12 @@ package encobib;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@SpringBootApplication
-@EnableJpaAuditing
-@Configuration
-public class Application {
+@SpringBootApplication(scanBasePackages = { "me.ramswaroop.jbot", "encobib" })
+public class Application extends SpringBootServletInitializer {
 
     //    @Bean
     //    @ConditionalOnProperty(name = "repositoryType", havingValue = "db")

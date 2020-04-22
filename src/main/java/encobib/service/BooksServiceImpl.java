@@ -8,18 +8,20 @@ import java.util.regex.Pattern;
 
 import encobib.exceptions.BookNotFoundException;
 import encobib.model.Book;
+import encobib.model.LendingPeriod;
 import encobib.repository.PostGreSQLBooksRepository;
-import org.springframework.http.HttpStatus;
+import encobib.repository.PostGreSqlLendingPeriodsRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class BooksServiceImpl implements BooksService {
 
     private final PostGreSQLBooksRepository booksRepository;
+    private final PostGreSqlLendingPeriodsRepository lendindPeriodRepository;
 
-    BooksServiceImpl(PostGreSQLBooksRepository booksRepository) {
+    BooksServiceImpl(PostGreSQLBooksRepository booksRepository, PostGreSqlLendingPeriodsRepository lendindPeriodRepository) {
         this.booksRepository = booksRepository;
+        this.lendindPeriodRepository = lendindPeriodRepository;
     }
 
     public List<Book> getAllBooks() {
@@ -43,15 +45,15 @@ public class BooksServiceImpl implements BooksService {
     }
 
     public Book createOrUpdateBook(Book book) {
-        //        if (!validateIsbn(book.getIsbn())) {
-        //            throw new IllegalArgumentException("Error! The ISBN is not valid");
-        //        }
-        //        if (book.getTitle().isBlank()) {
-        //            throw new IllegalArgumentException("Error! Please enter a title");
-        //        }
-        //        if (checkIfIsbnOrTitleExists(book.getIsbn(), book.getTitle())) {
-        //            throw new IllegalArgumentException("Error! The ISBN or the title already exists");
-        //        }
+                if (!validateIsbn(book.getIsbn())) {
+                    throw new IllegalArgumentException("Error! The ISBN is not valid");
+                }
+                if (book.getTitle().isEmpty()) {
+                    throw new IllegalArgumentException("Error! Please enter a title");
+                }
+                if (checkIfIsbnOrTitleExists(book.getIsbn(), book.getTitle())) {
+                    throw new IllegalArgumentException("Error! The ISBN or the title already exists");
+                }
         if (book.getId() == null) {
             book = booksRepository.save(book);
             return book;
@@ -75,7 +77,6 @@ public class BooksServiceImpl implements BooksService {
     }
 
     public void deleteBookById(int id) throws BookNotFoundException {
-        validateBookId(id);
         booksRepository.deleteById(id);
     }
 
@@ -119,33 +120,14 @@ public class BooksServiceImpl implements BooksService {
         return false;
     }
 
-    private void validateBookId(int id) {
-        if (id < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Please enter a valid, non negative ID");
-        }
-    }
 
-    //    @Override
-    //    public List<LendingPeriod> getLendingPeriodsByBookId(int id) {
-    //        getBookById(id);
-    //        return booksRepository.getLendingPeriodsByBookId(id);
-    //    }
-    //
-    //    @Override
-    //    public LendingPeriod addNewLendingPeriod(int id, LendingPeriod lendingPeriod) {
-    //        if (lendingPeriod.getStartDate() == null) {
-    //            throw new IllegalArgumentException("Error! The startdate can´t be empty");
-    //        }
-    //        List<LendingPeriod> lendingPeriodList = getLendingPeriodsByBookId(id);
-    //        if (!lendingPeriodList.isEmpty() && lendingPeriodList.get(lendingPeriodList.size() - 1).getEndDate() == null) {
-    //            throw new IllegalArgumentException("Error! The book is already on loan");
-    //        }
-    //        if (lendingPeriod.getEndDate() == null || lendingPeriod.getStartDate().isBefore(lendingPeriod.getEndDate())) {
-    //            lendingPeriod.setBook(new Book(id));
-    //            return booksRepository.addNewLendingPeriod(id, lendingPeriod);
-    //        } else
-    //            throw new IllegalArgumentException("Error! The lending period startdate has to be before the enddate");
-    //    }
+        @Override
+        public Optional<LendingPeriod> getLendingPeriodsByBookId(int id) {
+            getBookById(id);
+            return lendindPeriodRepository.findById(id);
+        }
+
+
 }
 
 

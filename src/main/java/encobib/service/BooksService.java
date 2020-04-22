@@ -1,8 +1,10 @@
 package encobib.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import encobib.model.Book;
+import encobib.model.LendingPeriod;
 
 public interface BooksService {
 
@@ -13,8 +15,8 @@ public interface BooksService {
     Book getBookById(Integer id);
 
     void deleteBookById(int id);
-    //
-    //    List<LendingPeriod> getLendingPeriodsByBookId(int id);
-    //
-    //    LendingPeriod addNewLendingPeriod(int id, LendingPeriod lendingPeriod);
+
+    Optional<LendingPeriod> getLendingPeriodsByBookId(int id);
+
+//    LendingPeriod addNewLendingPeriod(int id, LendingPeriod lendingPeriod);
 }

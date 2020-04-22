@@ -30,7 +30,7 @@ public class BooksController {
         return booksService.getAllBooks();
     }
 
-    @RequestMapping
+    @RequestMapping(path ="/books")
     public String getAllBooks(Model model) {
         List<Book> list = booksService.getAllBooks();
         model.addAttribute("books", list);

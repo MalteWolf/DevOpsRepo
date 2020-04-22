@@ -71,11 +71,11 @@ public class LendingPeriod {
         this.id = id;
     }
 
-    LocalDate getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    LocalDate getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
